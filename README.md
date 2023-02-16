@@ -7,15 +7,20 @@ This chatbot is designed to help users track their emotions and triggers, and pr
 To use this chatbot, you will need the following:
 
 A Telegram account
-A Telegram bot token
-Python 3.6 or higher
-The Python-Telegram-Bot library
-The openpyxl library
-Installation
 
-Clone this repository or download the code as a zip file.
-Install Python 3.6 or higher on your system, if it is not already installed.
-Install the required Python libraries by running the following command in the terminal:
+A Telegram bot token
+
+Python 3.6 or higher
+
+The Python-Telegram-Bot library
+
+The openpyxl library
+
+# Installation
+
+1. Clone this repository or download the code as a zip file.
+2. Install Python 3.6 or higher on your system, if it is not already installed.
+3. Install the required Python libraries by running the following command in the terminal:
 ```
 pip install python-telegram-bot openpyxl
 ```
