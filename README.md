@@ -12,7 +12,7 @@ A Telegram bot token
 
 Python 3.6 or higher
 
-The Python-Telegram-Bot library
+The Python-Telegram-Bot library 13.7.0
 
 The openpyxl library
 
