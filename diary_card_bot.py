@@ -74,7 +74,7 @@ def main():
     logger = logging.getLogger(__name__)
 
     # Set up bot
-    token = '6106370648:AAERppDATZ48unpjeH9TdnrLNjwVfoyZrZ8'
+    token = 'TOKEN'
     updater = Updater(token, use_context=True)
     dp = updater.dispatcher
 
