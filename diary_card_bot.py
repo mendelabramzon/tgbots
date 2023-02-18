@@ -1,6 +1,7 @@
 import logging
 import telegram
-from telegram.ext import Updater, CommandHandler, ConversationHandler, MessageHandler, Filters
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, ConversationHandler, MessageHandler, Filters, CallbackQueryHandler
 import openpyxl
 import os
 from datetime import datetime
@@ -10,7 +11,7 @@ EMOTION, TRIGGER, NOTES = range(3)
 
 # Define command handlers
 def start(update, context):
-    update.message.reply_text('Welcome to the diary card! To start, please enter your emotion for the day.')
+    update.message.reply_text('Welcome to the diary card! To start, please enter your emotion.')
     return EMOTION
 
 def cancel(update, context):
@@ -46,6 +47,24 @@ def notes(update, context):
     sheet.append(row_data)
     workbook.save(filename)
     update.message.reply_text('Diary card saved!')
+    keyboard = [[InlineKeyboardButton("Add emotion", callback_data='add_emotion')],[InlineKeyboardButton("Download", callback_data='download')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('What would you like to do next?', reply_markup=reply_markup)
+    return ConversationHandler.END
+
+def add_emotion_callback(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Please enter your emotion.')
+    return EMOTION
+
+def download(update, context):
+    user_id = update.effective_user.id
+    filename = f'user_{user_id}.xlsx'
+    if os.path.isfile(filename):
+        update.message.reply_document(open(filename, 'rb'))
+    else:
+        update.message.reply_text('You have not saved any diary card data yet.')
     return ConversationHandler.END
 
 # Define main function
@@ -55,7 +74,7 @@ def main():
     logger = logging.getLogger(__name__)
 
     # Set up bot
-    token = 'YOUR_TELEGRAM_BOT_TOKEN'
+    token = '6106370648:AAERppDATZ48unpjeH9TdnrLNjwVfoyZrZ8'
     updater = Updater(token, use_context=True)
     dp = updater.dispatcher
 
@@ -69,11 +88,17 @@ def main():
         },
         fallbacks=[CommandHandler('cancel', cancel)]
     )
-
     dp.add_handler(conv_handler)
+
+    # Define command handlers
+    dp.add_handler(CommandHandler('download', download))
+
+    # Define callback handlers
+    dp.add_handler(CallbackQueryHandler(add_emotion_callback, pattern='add_emotion'))
 
     # Start the bot
     updater.start_polling()
+    logger.info('Bot started')
     updater.idle()
 
 if __name__ == '__main__':
